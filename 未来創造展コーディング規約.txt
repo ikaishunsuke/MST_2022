@@ -1,0 +1,159 @@
+～～～～～コーディング規約について～～～～～
+
+◆命名規則
+
+基本的にキャメル記法
+メンバ変数は_（アンダーバー）＋キャメル＋ハンガリアン記法(Inspector上で分かりやすくする為)
+
+メンバ変数
+    bool        _isHoge
+    byte        _bHoge
+    sbyte       _sbHoge
+    char        _cHoge
+    short       _sHoge
+    ushort      _usHoge
+    int         _iHoge
+    uint        _uiHoge
+    long        _lHoge
+    ulong       _ulHoge
+    float       _fHoge
+    double      _dHoge
+    decimal     _deHoge
+    string      _stHoge
+    object      _oHoge
+
+    vector      _vHoge
+    animator    _aHoge
+    gameobject  _gHoge
+    text	_tHoge
+
+    enum        HOGE
+
+スクリプト名	CHogeHoge.cs
+
+マテリアル	MTL_Hoge
+画像	IMG_Hoge
+プレハブ	PFB_Hoge
+3Dモデル	MDL_Hoge
+音             BGM_Hoge,  
+	SE_Hoge
+
+あとなにか別途あれば心に従ってつけておいてください。
+
+他のスクリプトから触る可能性のあるpublic関数についてはパスカル記法で。
+また、関数の説明を上部にコメントで書く事。
+private関数の命名は自由で良いです。
+
+例:
+    // 何の為に何をしている関数なのか
+    public float HogeHoge()
+    {
+
+    }
+
+getter,setterはGet_変数名(),Set_変数名とする。
+例:
+    public bool Get_isHoge()
+    {
+        return _isHoge;
+    }
+    public void Set_isHoge(bool isHoge)
+    {
+        _isHoge = isHoge;
+    }
+
+◆スタイル
+
+public及びprivateの表記は必ずする事。
+static変数の場合は、public及びprivateの後にstaticと書くこと。
+
+コメントは//の後に半角スペースを挟む事。
+例:
+    // コメント
+
+メンバ変数の定義の横には何の変数かコメントする事。
+例:
+    private float _fHoge = default;      // fugafuga
+
+{}の改行をする。（見やすくなるので）
+例:
+    if (hoge == fuga) 
+    {
+        piyo();
+    }
+
+ソースファイルにはヘッダ署名を書く。
+他人のスクリプトにgetter/setter等の関数を追加する場合はコードの下の方に書く。
+また、関数・変数を追加する場合は、一番最初にHistoryのようにいつ・誰が書いたかを記載する。
+既存の関数に何らかの仕様を追加した場合は、必ず変更した箇所がわかるように変更の始まりと終わりに区切りの線を入れる。
+更新内容ヘッダのHistoryに記入、関数の上にも日付名前内容をコメントする。
+
+例:
+/*==============================================================================
+    [CHogeHoge.cs]
+    ◆PiyoPiyo
+--------------------------------------------------------------------------------
+    2021.03.21 @Author YAMADA TARO
+================================================================================
+    History
+        2021.03.24 SUZUKI HANAKO
+            更新内容
+            
+        2021.03.25 SUZUKI HANAKO
+            加速状態のgetterを追加しました。
+        
+/*============================================================================*/
+using UnityEngine;
+
+    public class CHogeHoge : MonoBehaviour {
+    
+    ～～～～～～～～～～～～～～～～～～～
+    
+    // Small is beautiful. Simple is best. ｂｙなおこちゃん先生
+    
+    ～～～～～～～～～～～～～～～～～～～
+    
+    	//************ 2021.03.25 鈴木
+    	// 加速状態のGetter
+    	public bool Get_isAccele() 
+    	{ 
+		return _isAccele;
+     	}
+    
+    }
+
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓テンプレ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+/*==============================================================================
+    [FILE NAME.cs]
+    ・何のスクリプトかざっくり書いとく
+--------------------------------------------------------------------------------
+    YYYY.MM.DD @Author Name
+================================================================================
+    History
+        YYYY.MM.DD NAME
+            何の変更したか書く
+            
+/*============================================================================*/
+
+
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓テンプレ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+//************ YYYY.MM.DD NAME
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Unityプロジェクト上のファイルについて
+※勝手に増やさない。増やす前は、一言いう。さもなくば、死あるのみ。
+
+大分類→中分類（サウンド等は必須）→シーン→ファイル
+
+Sound→BGM/SE→Title/Game/Result→Hoge.mp4等を置く。
+Script→Title/Game/Result→Hoge.csを置く。
+的な。
+Material
+Particle
+Prefab....
