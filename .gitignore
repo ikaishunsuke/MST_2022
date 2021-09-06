@@ -9,6 +9,7 @@
 /MST_2022/[Bb]uilds/
 /MST_2022/[Ll]ogs/
 /MST_2022/[Mm]emoryCaptures/
+/MST_2022/[Uu]ser[Ss]ettings/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
