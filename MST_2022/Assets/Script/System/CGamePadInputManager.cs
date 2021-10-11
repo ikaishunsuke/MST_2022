@@ -19,8 +19,8 @@
     ゲームパッドコードのボタンが押されたときtrue（Trigger）
 ・GetButton(ゲームパッドコード)
     ゲームパッドコードのボタンが押されている間true（Press） 
- ・public static Vector2 GetStickStatus(ゲームパッドのスティックコード)
-    ゲームパッドのスティックの状態を取得（Vector2）
+・GetStickStatus(ゲームパッドのスティックコード)
+    ゲームパッドのスティックがどの方向に倒されているかを取得（Vector2）
 
 ＊使用例＊
 // ゲームパッドのRスティックが左側に倒されたら（Trigger）
