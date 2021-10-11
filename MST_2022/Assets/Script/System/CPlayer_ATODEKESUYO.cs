@@ -17,13 +17,13 @@ public class CPlayer_ATODEKESUYO : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.A))
         {
-            _Player.transform.position = new Vector3(_Player.transform.position.x - 1.0f,
+            _Player.transform.position = new Vector3(_Player.transform.position.x - 0.5f,
                                                      _Player.transform.position.y, 
                                                      _Player.transform.position.z);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            _Player.transform.position = new Vector3(_Player.transform.position.x + 1.0f,
+            _Player.transform.position = new Vector3(_Player.transform.position.x + 0.5f,
                                                      _Player.transform.position.y,
                                                      _Player.transform.position.z);
         }
@@ -31,13 +31,13 @@ public class CPlayer_ATODEKESUYO : MonoBehaviour
         {
             _Player.transform.position = new Vector3(_Player.transform.position.x,
                                                      _Player.transform.position.y,
-                                                     _Player.transform.position.z + 1.0f);
+                                                     _Player.transform.position.z + 0.5f);
         }
         if (Input.GetKey(KeyCode.S))
         {
             _Player.transform.position = new Vector3(_Player.transform.position.x,
                                                      _Player.transform.position.y,
-                                                     _Player.transform.position.z - 1.0f);
+                                                     _Player.transform.position.z - 0.5f);
         }
     }
 }
