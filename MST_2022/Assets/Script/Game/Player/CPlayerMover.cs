@@ -17,30 +17,23 @@ using UnityEngine;
 public class CPlayerMover : MonoBehaviour
 {
 
+    [SerializeField] protected float _fWalkSpeed = 5.0f;     // 歩きのスピード
+    [SerializeField] protected float _fRotateSpeed = 5.0f;   // 振り向きスピード
 
-    [SerializeField] private float _fWalkSpeed = 5.0f;     // 歩きのスピード
-    [SerializeField] private float _fRotateSpeed = 5.0f;   // 振り向きスピード
+    protected Vector2 _vForward;      // 前方向
+    protected Rigidbody _rb;          // プレイヤーのRigidbody
 
 
-    private Vector2 _vForward;
-
-    private Rigidbody _rb;
-
-    
-    void Start()
+    protected virtual void Start()
     {
-
+        // キャッシュ
         _rb = GetComponent<Rigidbody>();
-        _vForward = transform.forward;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        _vForward = new Vector2(transform.forward.x, transform.forward.z);
     }
     
-    public void Walk(Vector2 dir)
+    // Walk 　歩く
+    // 引数：dir 向かう方向
+    public virtual void Walk(Vector2 dir)
     {
         _rb.velocity = new Vector3(dir.x, 0.0f, dir.y).normalized * _fWalkSpeed;
 
@@ -48,8 +41,8 @@ public class CPlayerMover : MonoBehaviour
     }
 
 
-
-    void Turn(Vector2 dir)
+    // Turn 回転（移動方向を向く）
+    protected virtual void Turn(Vector2 dir)
     {
 
         if (dir.x < -0.1f || dir.y < -0.1f ||

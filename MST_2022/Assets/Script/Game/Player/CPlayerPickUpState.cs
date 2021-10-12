@@ -17,65 +17,54 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
 {
     [SerializeField] CPlayerMover _cPlayerMover = null;     // プレイヤーを動かす用
 
-    CPickedUpObject _gPickUpObject;   // 持ち上げる
+    private CPickedUpObject _gPickUpObject;   // 持ち上げているオブジェクト
 
-    CPickedUpObject _gForwardObject;    // 目の前にあるオブジェクト
+    private CPickedUpObject _gForwardObject;    // 目の前にあるオブジェクト
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Move 動く
+    // 引数： direction 方向
     public void Move(Vector2 direction)
     {
         _cPlayerMover.Walk(direction);
     }
-
+    
+    // Action アクション ～持ち上げる置く～
     public void Action()
     {
-        Debug.Log(_gForwardObject);
-        Debug.Log(_gPickUpObject);
-        if (_gPickUpObject != null)
-        {
+        // 現在の状態によって持ち上げるor置くor何もしない
+
+        if(_gForwardObject != null &&
+            _gPickUpObject == null)
+        {// 持ち上げる
+            _gPickUpObject = _gForwardObject;
+            _gPickUpObject.PickedUp(transform.parent, transform.position);
+        }
+        else if (_gPickUpObject != null)
+        {// 置く
             _gPickUpObject.transform.parent = null;
             _gPickUpObject.Put();
             _gPickUpObject = null;
-
-        }
-        else if(_gForwardObject != null &&
-            _gPickUpObject == null)
-        {
-            _gPickUpObject = _gForwardObject;
-            _gPickUpObject.PickedUp(transform.parent, transform.position + Vector3.up);
         }
         
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         CPickedUpObject obj = other.GetComponent<CPickedUpObject>();
         if(obj != null)
         {
             _gForwardObject = obj;
         }
-        Debug.Log(other + "enter");
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         CPickedUpObject obj = other.GetComponent<CPickedUpObject>();
         if (obj == _gForwardObject)
         {
             _gForwardObject = null;
         }
-        Debug.Log(other + "exit");
     }
-
 
 }
