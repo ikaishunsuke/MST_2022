@@ -15,14 +15,13 @@ using UnityEngine;
 
 public class CPlayer : MonoBehaviour
 {
-    [SerializeField] private IPlayerState _state = null;
+    [SerializeField] private IPlayerState _state = null;    // åªç›ÇÃèÛë‘
 
     
 
     // Start is called before the first frame update
     void Start()
     {
-        
         _state = GetComponentInChildren<CPlayerPickUpState>();
     }
 
