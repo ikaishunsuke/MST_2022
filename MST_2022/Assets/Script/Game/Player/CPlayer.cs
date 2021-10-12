@@ -56,6 +56,6 @@ public class CPlayer : MonoBehaviour
         {
             _state.Action();
         }
-        
+
     }
 }
