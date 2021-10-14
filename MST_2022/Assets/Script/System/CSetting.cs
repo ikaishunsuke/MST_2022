@@ -1,10 +1,23 @@
+/*==============================================================================
+    [CSetting.cs]
+    ◆ポーズ画面兼音量設定などまぁオプション画面ですよね。
+--------------------------------------------------------------------------------
+    2021.10.11 @Author MISAKI SASAKI
+================================================================================
+    History
+        2021.10.11 MISAKI SASAKI
+            ポーズだけ作りました。
+        
+/*============================================================================*/
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CSetting : MonoBehaviour
 {
-    GameObject _gPanel;
+    private GameObject _gPanel;
 
     // Start is called before the first frame update
     void Start()

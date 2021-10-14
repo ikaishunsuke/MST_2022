@@ -6,7 +6,11 @@
 ================================================================================
     History
         2021.10.11 MISAKI SASAKI
-            スクリプト追加
+            セーブロード機能もあるよ。(PlayerPrefs）
+            あ、ちなみにfor文の最大値を2にしてるけどそれは今ステージ１の
+            プロトだけだからって意味で
+            まぁ全ステージ完成した暁には_iHint.Lengthにします。
+            っていう自分用メモ残しとく
             
 /*============================================================================*/
 
@@ -23,8 +27,8 @@ public class CMedicalRecord : MonoBehaviour
     public static GameObject _gNewMark; // まだカルテ詳細をみていないやつがある場合は必ずつく。
     public GameObject[] _gHint;
 
-    // PlayerPrefsの関係上boolにしたかったけどintで我慢します。
-    // int = 0の時がfalse,int = 1の時がtrueとする。
+    /* PlayerPrefsの関係上boolにしたかったけどintで我慢します。
+       int = 0の時がfalse,int = 1の時がtrueとする。   */
     public static int[] _iHint = new int[8];
 
 

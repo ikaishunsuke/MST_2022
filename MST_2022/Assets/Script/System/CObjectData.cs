@@ -1,3 +1,18 @@
+/*==============================================================================
+    [CObjectData.cs]
+    ◆カルテに登録できるオブジェクトのなんやかんや
+--------------------------------------------------------------------------------
+    2021.10.11 @Author MISAKI SASAKI
+================================================================================
+    History
+        2021.10.11 MISAKI SASAKI
+            カルテに登録とか、まぁカルテ画面以外でカルテに関わる
+            なんやかんやはこっちに書いてます。カルテの内部的なアレは
+            CMedicalRecord.csにあるよ
+        
+/*============================================================================*/
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +20,7 @@ using UnityEngine.UI;
 
 public class CObjectData : MonoBehaviour
 {
-    public GameObject _Panel;
+    public GameObject _gPanel;
     public GameObject _gIconCanActive;
     private GameObject _gObj;
     private bool _bIsRecord;  // １度でも確認している場合はtrue
@@ -16,7 +31,7 @@ public class CObjectData : MonoBehaviour
         Vector3 vec = new Vector3(960.0f, 540.0f, 0.0f);
 
         _gObj = Instantiate(_gIconCanActive, this.transform.position, Quaternion.identity);
-        _gObj.transform.SetParent(_Panel.transform);
+        _gObj.transform.SetParent(_gPanel.transform);
         _gObj.transform.position = vec;
         _gObj.SetActive(false);
 
@@ -76,10 +91,5 @@ public class CObjectData : MonoBehaviour
         {
             _gObj.SetActive(false);
         }
-    }
-
-    void OnData1()
-    {
-        CMedicalRecord.OnHint_1();
     }
 }
