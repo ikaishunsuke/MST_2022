@@ -43,8 +43,9 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
         else if (_gPickUpObject != null)
         {// ’u‚­
             _gPickUpObject.transform.parent = null;
-            _gPickUpObject.Put();
+            _gPickUpObject.Placed();
             _gPickUpObject = null;
+            _gForwardObject = null;
         }
         
     }
@@ -60,6 +61,7 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
 
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log(other);
         CPickedUpObject obj = other.GetComponent<CPickedUpObject>();
         if (obj == _gForwardObject)
         {
