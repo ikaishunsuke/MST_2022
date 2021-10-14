@@ -1,16 +1,26 @@
-using UnityEngine;
+/*==============================================================================
+    [CPutSpace.cs]
+    ・天秤の皿の上。つまり物を置く場所
+--------------------------------------------------------------------------------
+    2021.10.14 @Fujiwara Aiko
+================================================================================
+    History
+        2021.10.14 Fujiwara Aiko
+            スクリプト追加
+            
+/*============================================================================*/
 
+using UnityEngine;
 
 public class CPutSpace : MonoBehaviour
 {
-    [SerializeField] private Transform[] _tPutSpaces = null;
-
-    private CPickedUpObject[] _cPickedUpObjectSpaces;
-    // private CPickedUpObject _cPutObject; // 置かれたオブジェクト
+    [SerializeField] private Transform[] _tPutSpaces = null;    // 置ける場所一覧
+    private CPickedUpObject[] _cPickedUpObjectSpaces;   // スペースに置かれているもの一覧
     
 
     void Start()
     {
+        // 置ける場所と置く場所の個数を一致させる
         _cPickedUpObjectSpaces = new CPickedUpObject[_tPutSpaces.Length];
     }
 
@@ -58,7 +68,7 @@ public class CPutSpace : MonoBehaviour
 
                 if (obj.Get_isCorrect())
                 {
-                    // 当たりオブジェクトを取り除いたの処理
+                    // 当たりオブジェクトを取り除いた時の処理
 
                 }
             }
