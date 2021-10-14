@@ -41,7 +41,6 @@ public class CPlayerMoverTP : CPlayerMover
     // Turn ‰ñ“]iˆÚ“®•ûŒü‚ğŒü‚­j
     protected override void Turn(Vector2 dir)
     {
-        Debug.Log(dir);
         if (dir.x < -0.1f || dir.y < -0.1f ||
             dir.x > 0.1f || dir.y > 0.1f)
         {// •ûŒü‚ª“ü—Í‚³‚ê‚Ä‚¢‚½‚ç
