@@ -7,85 +7,53 @@
     History
         2021.10.11 MISAKI SASAKI
             作りました。
-        
+        2021.10.14 MISAKI SASAKI
+            スライダーでの音量調整（オプション画面で）に対応させました。
 /*============================================================================*/
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;       //Sliderを使用するために必要
 
 public class CSoundSetting : MonoBehaviour
 {
-    [SerializeField] AudioMixer _audioMixer = default;
-    public static int _iMasterVol = 2;
+    private Slider _Slider;                     // 音量調整用スライダー
+    private float _fScroolSpeed = 1;    // 調整用スライダーを動かすスピード
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        _Slider = GetComponent<Slider>();
+        _Slider.value = AudioListener.volume;
     }
 
-    // Update is called once per frame
+    private void OnEnable()
+    {
+        _Slider.value = AudioListener.volume;
+        //スライダーの値が変更されたら音量も変更する
+        _Slider.onValueChanged.AddListener((sliderValue) => AudioListener.volume = sliderValue);
+    }
+
+    private void OnDisable()
+    {
+        _Slider.onValueChanged.RemoveAllListeners();
+    }
+
     void Update()
     {
+        float v = _Slider.value;
+
+        if (CInputManager.GetButton(INPUT_CODE.LEFT))
+        {
+            v -= _fScroolSpeed * Time.deltaTime;
+        }
+        if (CInputManager.GetButton(INPUT_CODE.RIGHT))
+        {
+            v += _fScroolSpeed * Time.deltaTime;
+        }
         
-    }
-
-    // 音量UP（ボタンとかどっかのスクリプトで呼ぶ用）
-    public void OnVolUp()
-    {
-        if (_iMasterVol == 1)
-        {
-            Debug.Log("音量２に");
-            _audioMixer.SetFloat("SE", 0.0f);
-            _audioMixer.SetFloat("BGM", 0.0f);
-
-            //vol1.SetActive(true);
-            //vol2.SetActive(true);
-            //vol3.SetActive(false);
-
-            _iMasterVol++;
-        }
-        else if (_iMasterVol == 2)
-        {
-            Debug.Log("音量３に");
-            _audioMixer.SetFloat("SE", 15.0f);
-            _audioMixer.SetFloat("BGM", 15.0f);
-
-            //vol1.SetActive(true);
-            //vol2.SetActive(true);
-            //vol3.SetActive(true);
-
-            _iMasterVol++;
-        }
-    }
-    // 音量DOWN（ボタンとかどっかのスクリプトで呼ぶ用）
-    public void OnVolDown()
-    {
-        if (_iMasterVol == 2)
-        {
-            Debug.Log("音量１に");
-            _audioMixer.SetFloat("SE", -15.0f);
-            _audioMixer.SetFloat("BGM", -15.0f);
-
-            //vol1.SetActive(true);
-            //vol2.SetActive(false);
-            //vol3.SetActive(false);
-
-            _iMasterVol--;
-        }
-        else if (_iMasterVol == 3)
-        {
-            Debug.Log("音量２に");
-            _audioMixer.SetFloat("SE", 0.0f);
-            _audioMixer.SetFloat("BGM", 0.0f);
-
-            //vol1.SetActive(true);
-            //vol2.SetActive(true);
-            //vol3.SetActive(false);
-
-            _iMasterVol--;
-        }
+        v = Mathf.Clamp(v, 0, 1);
+        _Slider.value = v;
     }
 }
