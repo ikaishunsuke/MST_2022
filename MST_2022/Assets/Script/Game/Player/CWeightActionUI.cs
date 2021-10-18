@@ -16,6 +16,7 @@ public class CWeightActionUI : MonoBehaviour
 {
     [SerializeField] GameObject _gPickUpActionUI = null;            // 拾うアクションUI
     [SerializeField] GameObject _gPutSpaceActionUI = null;          // 天秤に置くアクションUI
+    [SerializeField] GameObject _gDiscardActionUI = null;           // 捨てる（元に戻す）アクションUI
 
     [SerializeField] CPlayerPickUpState _cPlayerPickUpState = null; // 表示状況を取得
     
@@ -24,6 +25,7 @@ public class CWeightActionUI : MonoBehaviour
     {
         _gPickUpActionUI.SetActive(false);
         _gPutSpaceActionUI.SetActive(false);
+        _gDiscardActionUI.SetActive(false);
         _cPlayerPickUpState._ueChangeCanAction.AddListener(ChangeShowUI);
     }
 
@@ -34,18 +36,28 @@ public class CWeightActionUI : MonoBehaviour
         {// スペースにおける表示
             _gPutSpaceActionUI.SetActive(true);
             _gPickUpActionUI.SetActive(false);
+            _gDiscardActionUI.SetActive(false);
             return;
         }
         if(_cPlayerPickUpState.CanPickUp())
         {// 重りを拾える表示
             _gPickUpActionUI.SetActive(true);
             _gPutSpaceActionUI.SetActive(false);
+            _gDiscardActionUI.SetActive(false);
+            return;
+        }
+        if (_cPlayerPickUpState.CanDiscard())
+        {// 重りを捨てられる表示
+            _gPickUpActionUI.SetActive(false);
+            _gPutSpaceActionUI.SetActive(false);
+            _gDiscardActionUI.SetActive(true);
             return;
         }
 
         // 表示なし
         _gPickUpActionUI.SetActive(false);
         _gPutSpaceActionUI.SetActive(false);
+        _gDiscardActionUI.SetActive(false);
     }
     
 }
