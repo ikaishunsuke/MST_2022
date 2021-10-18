@@ -35,6 +35,10 @@ public class CMedicalRecord : MonoBehaviour
     private GameObject mainCamera;      // メインカメラ格納用
     private GameObject subCamera;       // サブカメラ格納用 
 
+    public GameObject _gCursor;         // カーソル画像
+    private Vector3[] _iCursorPosition = new Vector3[2];
+    private int _iCursorCnt;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,10 +65,23 @@ public class CMedicalRecord : MonoBehaviour
 
         _gNewMark = GameObject.Find("NewMark");
         _gNewMark.SetActive(false);
+        _gCursor = GameObject.Find("Cursor");
+        _gCursor.SetActive(false);
+
         _gPanel = GameObject.Find("Panel_MedicalRecord");
         _gPanel.SetActive(false);
 
         _gPausePanel = GameObject.Find("Panel_Pause");
+
+        _iCursorPosition[0] = _gCursor.transform.position;
+
+        for (int index = 1; index < _iCursorPosition.Length; index++)
+        {
+            Vector3 vec = _iCursorPosition[index - 1];
+            vec.x += 20.0f;
+            _iCursorPosition[index] = vec;
+        }
+        _iCursorCnt = 0;
 
         //メインカメラとサブカメラをそれぞれ取得
         mainCamera = GameObject.Find("MainCamera");
@@ -86,8 +103,7 @@ public class CMedicalRecord : MonoBehaviour
                     _gNewMark.SetActive(false);
                     _gIcon.SetActive(false);
                     _gPanel.SetActive(true);
-
-
+                    
                     // カルテデータの更新
                     //for (int index = 0; index < _iHint.Length; index++)
                     for (int index = 0; index < 2; index++)
@@ -103,6 +119,9 @@ public class CMedicalRecord : MonoBehaviour
                         {
                             _gHint[index * 2].SetActive(false);
                             _gHint[1 + index * 2].SetActive(true);
+
+                            _gCursor.SetActive(true);
+                            _gCursor.transform.position = _iCursorPosition[0];
                         }
                     }
                 }
@@ -111,23 +130,58 @@ public class CMedicalRecord : MonoBehaviour
                     _gPanel.SetActive(false);
                     _gIcon.SetActive(true);
                 }
-            }
 
-            // カルテが表示されている場合
-            if (_gPanel.activeSelf)
-            {
-                //サブカメラをアクティブに設定
-                mainCamera.SetActive(false);
-                subCamera.SetActive(true);
+                // カルテが表示されている場合
+                if (_gPanel.activeSelf)
+                {
+                    //サブカメラをアクティブに設定
+                    mainCamera.SetActive(false);
+                    subCamera.SetActive(true);
+                }
+                else
+                {
+                    //メインカメラをアクティブに設定
+                    subCamera.SetActive(false);
+                    mainCamera.SetActive(true);
+                }
             }
-            else
+            if (_gPanel)   // パネルが表示されている場合
             {
-                //メインカメラをアクティブに設定
-                subCamera.SetActive(false);
-                mainCamera.SetActive(true);
+                if (CInputManager.GetButtonDown(INPUT_CODE.RIGHT))
+                {
+                    for (int index = 0; index < 2; index++)
+                    {
+                        // カルテデータが開示されていない場合
+                        if (_iHint[index] == 0)
+                        {
+                        }
+                        // カルテデータが開示されている場合
+                        if (_iHint[index] == 1)
+                        {
+                            _iCursorCnt = 1;
+                            _gCursor.transform.position = _iCursorPosition[_iCursorCnt];
+                        }
+                    }
+                }
+                if (CInputManager.GetButtonDown(INPUT_CODE.LEFT))
+                {
+                    for (int index = 0; index < 2; index++)
+                    {
+                        // カルテデータが開示されていない場合
+                        if (_iHint[index] == 0)
+                        {
+                        }
+                        // カルテデータが開示されている場合
+                        if (_iHint[index] == 1)
+                        {
+                            _iCursorCnt = 0;
+                            _gCursor.transform.position = _iCursorPosition[_iCursorCnt];
+                        }
+                    }
+                }
             }
-
         }
+    
     }
 
     // 該当するカルテデータ対象オブジェクトにくっつけとくやつ

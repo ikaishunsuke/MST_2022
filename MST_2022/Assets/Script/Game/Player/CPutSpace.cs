@@ -7,7 +7,8 @@
     History
         2021.10.14 Fujiwara Aiko
             スクリプト追加
-            
+        2021.10.14 MISAKi SASAKI
+            火を灯す・消す&天秤の位置を動かす。そんなやつを追加
 /*============================================================================*/
 
 using UnityEngine;
@@ -29,7 +30,6 @@ public class CPutSpace : MonoBehaviour
     // 戻り値：置かれる場所（置くのに失敗した場合null）
     public Transform PlacedObject(CPickedUpObject obj)
     {
-
         // 空いてるスペースを探す
         for(int i = 0; i < _cPickedUpObjectSpaces.Length; i++)
         {
@@ -41,7 +41,12 @@ public class CPutSpace : MonoBehaviour
                 if (obj.Get_isCorrect())
                 {
                     // 当たりオブジェクトを置いたときの処理
-                    
+
+                    // トーチに火を付ける
+                    CFire.Set_Fire(i, true);
+
+                    // 天秤の位置調整
+                    CBalance.PlateUp();
                 }
 
                 return _tPutSpaces[i];
@@ -69,6 +74,12 @@ public class CPutSpace : MonoBehaviour
                 if (obj.Get_isCorrect())
                 {
                     // 当たりオブジェクトを取り除いた時の処理
+
+                    // トーチの火を消す
+                    CFire.Set_Fire(i, false);
+
+                    // 天秤の位置調整
+                    CBalance.PlateDown();
 
                 }
             }

@@ -39,19 +39,29 @@ public class CFire : MonoBehaviour
     {
         for (int index = 0; index < 3; index++)
         {
+            // 火をつけるフラグが立っていて
             if (_bIsFire[index])
             {
+                // 火がアクティブでない場合はアクティブにする
                 if (!_gFire[index].activeSelf)
                 {
                     _gFire[index].SetActive(true);
                 }
             }
+            else if(!_bIsFire[index])
+            {
+                // 火がアクティブな場合は非アクティブにする
+                if (_gFire[index].activeSelf)
+                {
+                    _gFire[index].SetActive(false);
+                }
+            }
         }
     }
 
-    // 火をつけるときに使う、配列と同じなので0が一番左端のイメージで。
-    public static void Set_Fire(int index)
+    // 火をつける/消すときに使う、配列と同じなので0が一番左端のイメージで。
+    public static void Set_Fire(int index,bool flag)
     {
-        _bIsFire[index] = true;
+        _bIsFire[index] = flag;
     }
 }
