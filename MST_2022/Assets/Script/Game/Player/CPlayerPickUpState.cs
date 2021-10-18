@@ -12,14 +12,15 @@
 
 
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CPlayerPickUpState : MonoBehaviour, IPlayerState
 {
     [SerializeField] CPlayerMover _cPlayerMover = null;     // プレイヤーを動かす用
-
     private CPickedUpObject _gPickUpObject;   // 持ち上げているオブジェクト
-
     private CPickedUpObject _gForwardObject;    // 目の前にあるオブジェクト
+
+    [HideInInspector] public UnityEvent _ueChangeCanAction = new UnityEvent();       // 今できるアクションの変化を通知
 
 
     // Move 動く
@@ -39,13 +40,16 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
         {// 持ち上げる
             _gPickUpObject = _gForwardObject;
             _gPickUpObject.PickedUp(transform.parent, transform.position);
+            _gPickUpObject._ueChangeCanPut.AddListener(ChangeCanAction);
+            _ueChangeCanAction.Invoke();
         }
         else if (_gPickUpObject != null)
         {// 置く
-            _gPickUpObject.transform.parent = null;
             _gPickUpObject.Placed();
+            _gPickUpObject._ueChangeCanPut.RemoveListener(ChangeCanAction);
             _gPickUpObject = null;
             _gForwardObject = null;
+            _ueChangeCanAction.Invoke();
         }
         
     }
@@ -56,17 +60,46 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
         if(obj != null)
         {
             _gForwardObject = obj;
+            _ueChangeCanAction.Invoke();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log(other);
         CPickedUpObject obj = other.GetComponent<CPickedUpObject>();
         if (obj == _gForwardObject)
         {
             _gForwardObject = null;
+            _ueChangeCanAction.Invoke();
         }
+    }
+
+    // 今できるアクションが変化
+    void ChangeCanAction()
+    {
+        _ueChangeCanAction.Invoke();
+    }
+
+    // CanPickUp 拾えるオブジェクトがあるかどうかを取得
+    public bool CanPickUp()
+    {
+
+        if (_gForwardObject != null &&
+            _gPickUpObject == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // CanPutSpace スペースに置けるかどうかを取得
+    public bool CanPutSpace()
+    {
+        if (_gPickUpObject != null)
+        {
+            return _gPickUpObject.CanPutSpace();
+        }
+        return false;
     }
 
 }
