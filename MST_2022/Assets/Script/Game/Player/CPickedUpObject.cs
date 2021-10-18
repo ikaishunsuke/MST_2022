@@ -12,6 +12,7 @@
 
 
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider))]
 public class CPickedUpObject : MonoBehaviour
@@ -27,6 +28,10 @@ public class CPickedUpObject : MonoBehaviour
     private CPutSpace _cTouchingPutSpace = null;    // 現在触れている置き場所
     private bool _isPlacedSpace = false;            // 置き場所に置かれているか
 
+    private Animator _animator;                     // アニメーションキャッシュ（元に戻るアニメーション用）
+
+    [HideInInspector] public UnityEvent _ueChangeCanPut = new UnityEvent();    // 置けるかどうか変化したときに呼び出される
+
 
     private void Start()
     {
@@ -38,6 +43,8 @@ public class CPickedUpObject : MonoBehaviour
         _vOffsetColliderSize = _collider.size;
 
         gameObject.AddComponent<BoxCollider>().isTrigger = true;
+
+        _animator = GetComponent<Animator>();
 
     }
 
@@ -55,6 +62,7 @@ public class CPickedUpObject : MonoBehaviour
         if(_isPlacedSpace)
         {
             _cTouchingPutSpace.RemoveObject(this);
+            _cTouchingPutSpace = null;
             _isPlacedSpace = false;
             _collider.size = _vOffsetColliderSize;  // Collisionの大きさを元に戻す
         }
@@ -69,17 +77,10 @@ public class CPickedUpObject : MonoBehaviour
         {
             // スペースに置く
             Transform spacePos = _cTouchingPutSpace.PlacedObject(this);
-            if(spacePos == null)
-            {
-                // 置くスペースが無かったので元の場所に戻る
-                transform.position = _vOffsetPos;
-                transform.rotation = _vOffsetRot;
-                return;
-            }
-            else
+            if(spacePos != null)
             {
                 // スペースに置かれる
-                //transform.parent = spacePos;
+                transform.parent = null;
                 transform.localRotation = Quaternion.identity;
                 transform.position = spacePos.position + transform.up * transform.lossyScale.y;
 
@@ -91,27 +92,46 @@ public class CPickedUpObject : MonoBehaviour
         else
         {
             // 置ける位置じゃなかったら元の場所に戻る
-            transform.position = _vOffsetPos;
-            transform.rotation = _vOffsetRot;
+            if (_animator != null)
+            {
+                _animator.Play("Disappear");    // 消えるアニメーション開始
+            }
+            else
+            {
+                ReturnOffsetPos();
+            }
         }
 
     }
 
-    // 当たりのオブジェクトかどうか (Getter)
-    public bool Get_isCorrect()
+    // 元の位置に戻る
+    // (消えるアニメーション終了時に呼ぶ)
+    public void ReturnOffsetPos()
     {
-        return _isCorrect;
-    }
+        transform.parent = null;
+        transform.position = _vOffsetPos;
+        transform.rotation = _vOffsetRot;
 
+        _cTouchingPutSpace = null;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other);
         CPutSpace space = other.GetComponent<CPutSpace>();
-        if (space != null)
+        if (space != null && !_isPlacedSpace)
         {
-            // スペースにおける状態に
-            _cTouchingPutSpace = space;
+            // 試行
+            Transform spacePos = space.PlacedObject(this);
+
+            if (spacePos != null)
+            {
+                // スペースにおける状態に
+                _cTouchingPutSpace = space;
+                _ueChangeCanPut.Invoke();
+
+                // 試行したのを取り消す
+                _cTouchingPutSpace.RemoveObject(this);
+            }
         }
     }
     
@@ -123,7 +143,24 @@ public class CPickedUpObject : MonoBehaviour
         {
             // スペースにおけない
             _cTouchingPutSpace = null;
+            _ueChangeCanPut.Invoke();
         }
+    }
+
+    // CanPutSpace スペースに置けるかどうか
+    public bool CanPutSpace()
+    {
+        if(_cTouchingPutSpace != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // 当たりのオブジェクトかどうか (Getter)
+    public bool Get_isCorrect()
+    {
+        return _isCorrect;
     }
 
 }
