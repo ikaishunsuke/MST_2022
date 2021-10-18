@@ -14,6 +14,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Title.unity
     guid: dacfa51a8848e074e990244fbaa397ab
+  - enabled: 1
+    path: Assets/Scenes/Yoshida/yoshida.unity
+    guid: 801560b6fa13da9448e426f5acb346eb
+  - enabled: 1
+    path: Assets/Scenes/Yoshida/AfterTheGoal.unity
+    guid: f5c8a2cd95260524e858bc0aa9658fe0
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 74dcbb41e96f27c4e9c458feb4fb4237,
       type: 2}
