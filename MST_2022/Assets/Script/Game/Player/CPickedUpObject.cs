@@ -10,7 +10,7 @@
             
 /*============================================================================*/
 
-
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -27,9 +27,7 @@ public class CPickedUpObject : MonoBehaviour
 
     private CPutSpace _cTouchingPutSpace = null;    // 現在触れている置き場所
     private bool _isPlacedSpace = false;            // 置き場所に置かれているか
-
-    private Animator _animator;                     // アニメーションキャッシュ（元に戻るアニメーション用）
-
+    
     [HideInInspector] public UnityEvent _ueChangeCanPut = new UnityEvent();    // 置けるかどうか変化したときに呼び出される
 
 
@@ -44,28 +42,27 @@ public class CPickedUpObject : MonoBehaviour
 
         gameObject.AddComponent<BoxCollider>().isTrigger = true;
 
-        _animator = GetComponent<Animator>();
-
     }
 
     // PickedUp 持ち上げられる
     // 引数： Parent 持ち上げられた時の親オブジェクト、position 持ち上げられた時の位置
     public void PickedUp(Transform parent, Vector3 position)
     {
-
-        // 自身を子オブジェクトにし、位置を変更
-        transform.parent = parent;
-        transform.localRotation = Quaternion.identity;
-        transform.position = position + transform.forward * transform.localScale.x * 0.5f + transform.up * transform.localScale.y * 0.5f;
-
         // 置きスペースに置かれていたら、スペースに持ち上げられたことを伝える
-        if(_isPlacedSpace)
+        if (_isPlacedSpace)
         {
             _cTouchingPutSpace.RemoveObject(this);
             _cTouchingPutSpace = null;
             _isPlacedSpace = false;
             _collider.size = _vOffsetColliderSize;  // Collisionの大きさを元に戻す
+
+            transform.parent = null;
         }
+
+        // 自身を子オブジェクトにし、位置を変更
+        transform.parent = parent;
+        transform.localRotation = Quaternion.identity;
+        transform.position = position + transform.forward * transform.localScale.x * 0.5f + transform.up * transform.localScale.y * 0.5f;
 
     }
 
@@ -73,46 +70,71 @@ public class CPickedUpObject : MonoBehaviour
     public void Placed()
     {
 
-        if(_cTouchingPutSpace != null)
+        if (_cTouchingPutSpace != null)
         {
             // スペースに置く
             Transform spacePos = _cTouchingPutSpace.PlacedObject(this);
-            if(spacePos != null)
+            if (spacePos != null)
             {
                 // スペースに置かれる
-                transform.parent = null;
                 transform.localRotation = Quaternion.identity;
-                transform.position = spacePos.position + transform.up * transform.lossyScale.y;
+                transform.position = spacePos.position + transform.up * transform.lossyScale.y * 0.5f;
 
                 _collider.size = new Vector3(_vOffsetColliderSize.x * (8.0f / transform.lossyScale.x), _vOffsetColliderSize.y, _vOffsetColliderSize.z * (20.0f / transform.lossyScale.x));
                 _isPlacedSpace = true;
+
+                transform.parent = spacePos;
             }
 
         }
         else
         {
             // 置ける位置じゃなかったら元の場所に戻る
-            if (_animator != null)
-            {
-                _animator.Play("Disappear");    // 消えるアニメーション開始
-            }
-            else
-            {
-                ReturnOffsetPos();
-            }
+            StartCoroutine(DisappearAnim());// 消えるアニメーション開始
+
         }
 
     }
-
-    // 元の位置に戻る
-    // (消えるアニメーション終了時に呼ぶ)
-    public void ReturnOffsetPos()
+    
+    // DisappearAnim 消えるアニメーション
+    private IEnumerator DisappearAnim()
     {
+
+        // オブジェクトのRendererを取ってきて透明度を下げる
+        Renderer renderer = GetComponent<Renderer>();
+
+        for (float time = 0.0f; time < 1.0f; time += Time.deltaTime)
+        {
+            Color color = renderer.material.color;
+            color.a = (1.0f - time) * 2.0f;
+            if (color.a > 1.0f) color.a = 1.0f;
+            renderer.material.color = color;
+            renderer.material.SetFloat("_Threshold", time);
+            yield return null;
+        }
+
         transform.parent = null;
         transform.position = _vOffsetPos;
         transform.rotation = _vOffsetRot;
 
         _cTouchingPutSpace = null;
+
+        // 再出現する
+        for (float time = 0.0f; time < 1.0f; time += Time.deltaTime)
+        {
+            Color color = renderer.material.color;
+            color.a = time * 2.0f;
+            if (color.a > 1.0f) color.a = 1.0f;
+            renderer.material.color = color;
+            renderer.material.SetFloat("_Threshold", 1.0f - time);
+            yield return null;
+        }
+
+        // 初期状態に戻す
+        Color c = renderer.material.color;
+        c.a = 1.0f;
+        renderer.material.color = c;
+        renderer.material.SetFloat("_Threshold", 0.0f);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -120,17 +142,11 @@ public class CPickedUpObject : MonoBehaviour
         CPutSpace space = other.GetComponent<CPutSpace>();
         if (space != null && !_isPlacedSpace)
         {
-            // 試行
-            Transform spacePos = space.PlacedObject(this);
-
-            if (spacePos != null)
+            if (space.IsThereSpace())   // 置くスペースがあるか確認
             {
                 // スペースにおける状態に
                 _cTouchingPutSpace = space;
                 _ueChangeCanPut.Invoke();
-
-                // 試行したのを取り消す
-                _cTouchingPutSpace.RemoveObject(this);
             }
         }
     }

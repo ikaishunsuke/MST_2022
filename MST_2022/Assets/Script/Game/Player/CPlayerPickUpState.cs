@@ -102,4 +102,14 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
         return false;
     }
 
+    // CanDiscard ŽÌ‚Ä‚ç‚ê‚é‚©‚Ç‚¤‚©‚ðŽæ“¾
+    public bool CanDiscard()
+    {
+        if (_gPickUpObject != null)
+        {
+            return !_gPickUpObject.CanPutSpace();
+        }
+        return false;
+    }
+
 }
