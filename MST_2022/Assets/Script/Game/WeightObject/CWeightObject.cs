@@ -1,6 +1,6 @@
 /*==============================================================================
-    [CPickedUpObject.cs]
-    ・プレイヤーが拾えるオブジェクト
+    [CWeightObject.cs]
+    ・天秤の重り
 --------------------------------------------------------------------------------
     2021.10.11 @Fujiwara Aiko
 ================================================================================
@@ -15,7 +15,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider))]
-public class CPickedUpObject : MonoBehaviour
+public class CWeightObject : MonoBehaviour
 {
     
     [SerializeField] private bool _isCorrect = false;    // 当たりオブジェクトかどうか

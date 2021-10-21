@@ -17,8 +17,8 @@ using UnityEngine.Events;
 public class CPlayerPickUpState : MonoBehaviour, IPlayerState
 {
     [SerializeField] CPlayerMover _cPlayerMover = null;     // プレイヤーを動かす用
-    private CPickedUpObject _gPickUpObject;   // 持ち上げているオブジェクト
-    private CPickedUpObject _gForwardObject;    // 目の前にあるオブジェクト
+    private CWeightObject _gPickUpObject;   // 持ち上げているオブジェクト
+    private CWeightObject _gForwardObject;    // 目の前にあるオブジェクト
 
     [HideInInspector] public UnityEvent _ueChangeCanAction = new UnityEvent();       // 今できるアクションの変化を通知
 
@@ -56,7 +56,7 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
 
     private void OnTriggerEnter(Collider other)
     {
-        CPickedUpObject obj = other.GetComponent<CPickedUpObject>();
+        CWeightObject obj = other.GetComponent<CWeightObject>();
         if(obj != null)
         {
             _gForwardObject = obj;
@@ -66,7 +66,7 @@ public class CPlayerPickUpState : MonoBehaviour, IPlayerState
 
     private void OnTriggerExit(Collider other)
     {
-        CPickedUpObject obj = other.GetComponent<CPickedUpObject>();
+        CWeightObject obj = other.GetComponent<CWeightObject>();
         if (obj == _gForwardObject)
         {
             _gForwardObject = null;
