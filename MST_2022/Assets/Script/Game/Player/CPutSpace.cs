@@ -18,7 +18,7 @@ using UnityEngine;
 public class CPutSpace : MonoBehaviour
 {
     [SerializeField] private Transform[] _tPutSpaces = null;    // 置ける場所一覧
-    private CPickedUpObject[] _cPickedUpObjectSpaces;   // スペースに置かれているもの一覧
+    private CWeightObject[] _cPickedUpObjectSpaces;   // スペースに置かれているもの一覧
 
     private int _iMaxPutNum = 3;        // 置ける数＝正解のオブジェクトの数
     private int _iCorrectPutObjNum = 0;  // 今置いてあるオブジェクトの中で正解の数
@@ -28,14 +28,14 @@ public class CPutSpace : MonoBehaviour
     void Start()
     {
         // 置ける場所と置く場所の個数を一致させる
-        _cPickedUpObjectSpaces = new CPickedUpObject[_tPutSpaces.Length];
+        _cPickedUpObjectSpaces = new CWeightObject[_tPutSpaces.Length];
         _iMaxPutNum = _tPutSpaces.Length;
     }
 
     // PlacedObject スペースにオブジェクトを配置する
     // 引数：置くオブジェクト
     // 戻り値：置かれる場所（置くのに失敗した場合null）
-    public Transform PlacedObject(CPickedUpObject obj)
+    public Transform PlacedObject(CWeightObject obj)
     {
         if (_isClear) return null;  // クリア済の場合置けない
 
@@ -64,7 +64,7 @@ public class CPutSpace : MonoBehaviour
                         _isClear = true;
 
                         // 乗っている重りは動かせなくする（スクリプトを消す）
-                        foreach(CPickedUpObject inSpaceObj in _cPickedUpObjectSpaces)
+                        foreach(CWeightObject inSpaceObj in _cPickedUpObjectSpaces)
                         {
                             Destroy(inSpaceObj);
                         }
@@ -83,7 +83,7 @@ public class CPutSpace : MonoBehaviour
 
     // RemoveObject スペースに置かれているオブジェクトを取り除く
     // 引数：取り除くオブジェクト
-    public void RemoveObject(CPickedUpObject obj)
+    public void RemoveObject(CWeightObject obj)
     {
         if (_isClear) return;  // クリア済の場合取れない
 
